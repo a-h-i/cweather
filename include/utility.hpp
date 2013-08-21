@@ -27,7 +27,10 @@
  *@file
  */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wall"
 #include <boost/regex.hpp>
+#pragma GCC diagnostic pop
 #include <array>
 #include <string>
 

@@ -26,8 +26,8 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
 #include "tinyxml2/tinyxml2.h"
+#include <boost/regex.hpp>
 #pragma GCC diagnostic pop
-#include <boost/asio.hpp>
 #include <memory>
 
 namespace cweather
@@ -47,44 +47,13 @@ namespace service
 {
 
 
-
-
-
-class Connecter
-{
-public:
-    virtual ~Connecter() {}
-    virtual std::size_t send_data( const std::vector<char> &data, boost::system::error_code& ec ) = 0;
-    virtual std::size_t read_data( std::vector<char> &data, boost::system::error_code& ec ) = 0;
-protected:
-    Connecter() = default;
-    Connecter( const Connecter& ) = default;
-    Connecter( Connecter&& ) = default;
-    Connecter& operator=( const Connecter& ) = default;
-    Connecter& operator=( Connecter && ) = default;
-protected:
-    static boost::asio::io_service service;
-};
-
-class TCPConnecter : public Connecter
-{
-public:
-    TCPConnecter( const std::string& host );
-    ~TCPConnecter();
-    std::size_t send_data( const std::vector<char> &data, boost::system::error_code& ec ) override;
-    std::size_t read_data( std::vector<char> &data, boost::system::error_code& ec ) override;
-private:
-    boost::asio::ip::tcp::socket sock;
-};
-
 class WeatherService
 {
 public:
-    WeatherService(Connecter * conn) : conn(conn){}
+    WeatherService(){}
     virtual ~WeatherService(){};
     virtual WeatherData get_weather_data(const std::string &country, const std::string &city) = 0;
 protected:
-    std::unique_ptr<Connecter> conn;
     WeatherData data;
 };
 
@@ -100,9 +69,8 @@ private:
     static const std::string CITY_TOKEN;
     static const boost::regex CITY_REQUEST_REGEX;
     static const std::string CITY_REQUEST;
+    static std::string get_xml_helper(const std::string &country, const std::string &city);
     tinyxml2::XMLDocument doc;
-    std::vector<char> get_xml(const std::string &country, const std::string &city);
-    void send_request_helper(const std::string & country, const std::string &city, boost::system::error_code &ec);
 };
 
 

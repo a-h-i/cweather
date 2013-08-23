@@ -23,9 +23,9 @@
 #include "weather_service.hpp"
 
 
-int main()
+int main(int argc, char * argv[])
 {
-	cweather::service::WebServiceXWeatherService to_test;
-	to_test.get_weather_data("Egypt", "Cairo");
+    cweather::service::WebServiceXWeatherService to_test;
+    to_test.get_weather_data( "Egypt", "Cairo" );
     return 0;
 }

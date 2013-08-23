@@ -25,7 +25,6 @@
 #define WEATHER_SERVICE_HPP
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
-#include "tinyxml2/tinyxml2.h"
 #include <boost/regex.hpp>
 #pragma GCC diagnostic pop
 #include <memory>
@@ -38,9 +37,9 @@ struct WeatherData
 
     unsigned short wind_speed; // SI
     unsigned short wind_direction_degrees; // SI
-    float humidity; // SI
-    float temperature;// SI
-    //boost::locale::date_time time;
+    double humidity; // SI
+    double temperature;// SI
+    double pressure; // SI
 };
 
 namespace service
@@ -50,9 +49,9 @@ namespace service
 class WeatherService
 {
 public:
-    WeatherService(){}
-    virtual ~WeatherService(){};
-    virtual WeatherData get_weather_data(const std::string &country, const std::string &city) = 0;
+    WeatherService() {}
+    virtual ~WeatherService() {};
+    virtual WeatherData get_weather_data( const std::string& country, const std::string& city ) = 0;
 protected:
     WeatherData data;
 };
@@ -62,15 +61,14 @@ class WebServiceXWeatherService : public WeatherService
 public:
     WebServiceXWeatherService();
     ~WebServiceXWeatherService();
-    WeatherData get_weather_data(const std::string &country, const std::string &city) override;
+    WeatherData get_weather_data( const std::string& country, const std::string& city ) override;
 private:
     static const std::string HOST;
     static const std::string COUNTRY_TOKEN;
     static const std::string CITY_TOKEN;
-    static const boost::regex CITY_REQUEST_REGEX;
     static const std::string CITY_REQUEST;
-    static std::string get_xml_helper(const std::string &country, const std::string &city);
-    tinyxml2::XMLDocument doc;
+    static const boost::regex CITY_REQUEST_REGEX;
+    static std::string get_xml_helper( const std::string& country, const std::string& city );
 };
 
 

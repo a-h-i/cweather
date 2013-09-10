@@ -3,6 +3,7 @@
 src =  Split('src/entry src/utility src/webservicex_service  src/city_forecast')
 
 debug = Environment()
+debug['CXX'] = 'g++-4.8'
 debug['CXXFLAGS'] = '-Wall -std=c++11 -ggdb -pg -I./include -I.'
 def make_objs(file_list, suffix, env) :
     return [ env.Object(file + suffix + '.o', file + '.cpp' ) for file in file_list ]

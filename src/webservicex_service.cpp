@@ -86,9 +86,9 @@ std::string cweather::service::WebServiceXWeatherService::get_xml_helper(
 {
     std::vector<char> temp( CITY_REQUEST.size() + country.size() + city.size() );
     const std::string fmt = std::string( "(?1" ) + city + ")(?2" + country + ")";
-    auto new_end = utility::apply_regex( temp.begin(), CITY_REQUEST.cbegin(),
-                                         CITY_REQUEST.cend(), CITY_REQUEST_REGEX,
-                                         fmt );
+    auto new_end =  boost::regex_replace( temp.begin(), CITY_REQUEST.cbegin(), CITY_REQUEST.cend(), CITY_REQUEST_REGEX, fmt,
+                                 boost::match_default | boost::format_all );
+
     std::string request_str( temp.begin(),
                              new_end ); // this string contains a valid URL
     auto response = utility::curl_perform( request_str, handle_response );

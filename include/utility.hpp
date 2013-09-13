@@ -31,9 +31,7 @@
 #pragma GCC diagnostic ignored "-Wall"
 #include <boost/regex.hpp>
 #pragma GCC diagnostic pop
-#include <array>
 #include <string>
-#include <functional>
 
 namespace cweather
 {
@@ -46,28 +44,11 @@ extern const std::string HTML_ENTITIY_FMT;
 extern const boost::regex HTML_HEADER_REGEX;
 
 
-template <class OutputItr, class InputItr>
-OutputItr apply_regex ( OutputItr out, InputItr begin, InputItr end,
-                        const boost::regex& regex,
-                        const  std::string& fmt )
-{
-    return boost::regex_replace( out, begin, end, regex, fmt,
-                                 boost::match_default | boost::format_all );
-}
 
 
-template <class MutableBidirItr, class OutputTtr>
-OutputTtr decode_html_remove_header( OutputTtr out, MutableBidirItr begin,
-                                     MutableBidirItr end )
-{
-    return boost::regex_replace( out, begin, end, HTML_HEADER_REGEX, "",
-                                 boost::match_default | boost::format_all );
-}
-
-
-
-
-
+/**
+ * @brief translates html entities such as &lt.
+ */
 template <class MutableBidirItr, class OutputTtr>
 OutputTtr decode_html_entities( OutputTtr out, MutableBidirItr begin,
                                 MutableBidirItr end )
@@ -78,6 +59,13 @@ OutputTtr decode_html_entities( OutputTtr out, MutableBidirItr begin,
 
 
 
+
+/**
+ * @brief performs a blocking HTTP GET request using libcurl. 
+ * @return http response body as processed by provided call back.
+ * @param callback provided call back function for processing response body. param actual types (const char * original_body, std::size_t body_length, std::string *to_fill )
+ * @param request HTTP request to send.
+ */
 std::string curl_perform( std::string request,
                           std::size_t ( *callback ) ( void *, std::size_t, std::size_t, void * ) );
 

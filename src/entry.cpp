@@ -23,7 +23,7 @@
 #include "weather_service.hpp"
 
 
-int main(int argc, char * argv[])
+int main( int argc, char * argv[] )
 {
     cweather::service::WebServiceXWeatherService to_test;
     to_test.get_weather_data( "Egypt", "Cairo" );

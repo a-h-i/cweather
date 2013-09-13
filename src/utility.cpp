@@ -21,9 +21,37 @@
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "utility.hpp"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wall"
+#include <curl/curl.h>
+#pragma GCC diagnostic pop
+
+const boost::regex
+cweather::utility::HTML_ENTITIY_REGEX( "(&amp;)|(&quot;)|(&lt;)|(&gt;)|(&apos;)",
+                                       boost::regex::optimize );
+const std::string
+cweather::utility::HTML_ENTITIY_FMT( "(?1&)(?2\")(?3<)(?4>)(?5')" );
+const boost::regex cweather::utility::HTML_HEADER_REGEX(
+    R"delim((.+\w\r\n)|\r\n)delim", boost::regex::optimize );
 
 
-const boost::regex cweather::utility::HTML_ENTITIY_REGEX( "(&amp;)|(&quot;)|(&lt;)|(&gt;)|(&apos;)",
-        boost::regex::optimize );
-const std::string cweather::utility::HTML_ENTITIY_FMT( "(?1&)(?2\")(?3<)(?4>)(?5')" );
-const boost::regex cweather::utility::HTML_HEADER_REGEX( R"delim((.+\w\r\n)|\r\n)delim", boost::regex::optimize );
+std::string cweather::utility::curl_perform( std::string request,
+        std::size_t ( *callback ) ( void *, std::size_t,
+                                    std::size_t, void * ) )
+{
+    CURL * curl = curl_easy_init(); // init curl
+    curl_easy_setopt( curl, CURLOPT_URL, request.c_str() ); // URL
+    curl_easy_setopt( curl, CURLOPT_TCP_KEEPALIVE, 0 );
+    std::string response;
+    curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, callback ); // callback
+    curl_easy_setopt( curl, CURLOPT_WRITEDATA,
+                      reinterpret_cast<void *> ( &response ) );
+    curl_easy_setopt( curl, CURLOPT_WRITEHEADER, nullptr );
+    CURLcode ec = curl_easy_perform( curl ); // send request
+    curl_easy_cleanup( curl );
+    if( ec != CURLE_OK )
+        {
+            // TODO: throw stuff
+        }
+    return response;
+}

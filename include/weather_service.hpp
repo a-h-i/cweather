@@ -51,7 +51,8 @@ class WeatherService
 public:
     WeatherService() {}
     virtual ~WeatherService() {};
-    virtual WeatherData get_weather_data( const std::string& country, const std::string& city ) = 0;
+    virtual WeatherData get_weather_data( const std::string& country,
+                                          const std::string& city ) = 0;
 protected:
     WeatherData data;
 };
@@ -61,14 +62,16 @@ class WebServiceXWeatherService : public WeatherService
 public:
     WebServiceXWeatherService();
     ~WebServiceXWeatherService();
-    WeatherData get_weather_data( const std::string& country, const std::string& city ) override;
+    WeatherData get_weather_data( const std::string& country,
+                                  const std::string& city ) override;
 private:
     static const std::string HOST;
     static const std::string COUNTRY_TOKEN;
     static const std::string CITY_TOKEN;
     static const std::string CITY_REQUEST;
     static const boost::regex CITY_REQUEST_REGEX;
-    static std::string get_xml_helper( const std::string& country, const std::string& city );
+    static std::string get_xml_helper( const std::string& country,
+                                       const std::string& city );
 };
 
 

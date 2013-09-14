@@ -5,7 +5,11 @@ src =  Split('src/entry src/utility src/webservicex_service  src/city_forecast s
 
 debug = Environment(ENV = {'PATH' : os.environ['PATH']})
 debug['CXX'] = 'icc'
-debug['CXXFLAGS'] = '-Wall -std=c++11 -g -p -I./include -I.'
+debug['CXXFLAGS'] = '-Wall -std=c++11 -O0 -g -pg -I./include -I.'
+
+release = Environment(ENV = {'PATH' : os.environ['PATH']})
+release['CXX'] = 'icc'
+release['CXXFLAGS'] = '-Wall -Werror -std=c++11 -O3 -ipo -no-prec-div -xSSSE3 -axcore-avx2 -I./include -I.'
 def make_objs(file_list, suffix, env) :
     return [ env.Object(file + suffix + '.o', file + '.cpp' ) for file in file_list ]
 
@@ -14,5 +18,8 @@ libs = Split('-lboost_date_time -lboost_regex -lboost_system -lcurl -lpthread -l
 d_objs = make_objs(src, '-dbg' , debug) + debug.Object('tinyxml2-dbg.o', 'tinyxml2/tinyxml2.cpp')
 
 d_target = debug.Program('debug', d_objs, LIBS=libs)
-Default(d_target)
 
+
+r_objs = make_objs(src, '-release', release) + release.Object('tinyxml2-release.o', 'tinyxml2/tinyxml2.cpp' );
+r_target = release.Program('cweather', r_objs, LIBS=libs)
+Default(r_target)

@@ -3,3 +3,5 @@ debug
 cweather
 *.dblite
 *.orig
+*.out.*
+gmon.out

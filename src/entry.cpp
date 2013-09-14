@@ -50,12 +50,12 @@ int main( int argc, const char * argv[] )
             try
                 {
                     auto data = to_test.get_weather_data( argv[1], argv[2] );
-                    std::cout << "Temperature : " << data.temperature
-                              << "\nWind Speed : " << data.wind_speed
-                              << "\nWind Direction : " << data.wind_direction
-                              << "\nPressure : " << data.pressure
-                              << "\nVisibility : " << data.visibility
-                              << "\nHumidity : " << data.humidity << '\n';
+                    std::cout << "Temperature : " << data.temperature << " C."
+                              << "\nWind Speed : " << data.wind_speed << " KPH."
+                              << "\nWind Direction : " << data.wind_direction << " Degrees."
+                              << "\nPressure : " << data.pressure << " Pascal."
+                              << "\nVisibility : " << data.visibility << " Kilometers."
+                              << "\nHumidity : " << data.humidity * 100 << "%." ;
                     return 0;
                 }
             catch( cweather::exceptions::IncorrectLocationException& )

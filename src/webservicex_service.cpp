@@ -30,7 +30,6 @@
 #pragma GCC diagnostic pop
 #include <vector>
 #include <iterator>
-#include <iostream>
 // initalize static constants
 const std::string cweather::service::WebServiceXWeatherService::HOST =
     "http://www.webservicex.net";
@@ -95,7 +94,7 @@ std::string cweather::service::WebServiceXWeatherService::get_xml_helper(
                                           boost::match_default | boost::format_all );
     std::string request_str( temp.begin(),
                              new_end ); // this string contains a valid URL
-    std::cout << encoded_country << std::endl;
+
     auto response = utility::curl_perform( request_str, handle_response );
     std::string clean_response; // after replacing entities
     clean_response.reserve( response.size() );

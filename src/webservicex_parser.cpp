@@ -20,18 +20,23 @@
 * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "weather_service.hpp"
+#include "parsers.hpp"
 
+const boost::regex cweather::service::parsers::WebServiceXParser::temperature_regex
+ (R"del((([0-9]+\.[0-9]+)|([0-9]+)) C)del", boost::regex::optimize);
 
-int main( int argc, char * argv[] )
-{
-    cweather::service::WebServiceXWeatherService to_test;
-    auto data = to_test.get_weather_data( "Egypt", "Cairo" );
-    std::cout << "\nTemperature : " << data.temperature
-              << "\nWind Speed : " << data.wind_speed
-              << "\nWind Direction : " << data.wind_direction
-              << "\nPressure : " << data.pressure
-              << "\nVisibility : " << data.visibility
-              << "\nHumidity : " << data.humidity << '\n'; 
-    return 0;
-}
+const boost::regex cweather::service::parsers::WebServiceXParser::pressure_regex
+ (R"del((([0-9]+\.[0-9]+])|([0-9]+)) hPa)del", boost::regex::optimize);
+
+const boost::regex cweather::service::parsers::WebServiceXParser::visibility_regex
+(R"del([0-9]+)del", boost::regex::optimize);
+
+const boost::regex cweather::service::parsers::WebServiceXParser::wind_direction_regex
+(R"del([0-9]+ degrees)del", boost::regex::optimize);
+
+const boost::regex cweather::service::parsers::WebServiceXParser::wind_speed_regex
+(R"del((([0-9]+)|([0-9]+\.[0-9]+)) MPH)del", boost::regex::optimize);
+
+const boost::regex cweather::service::parsers::WebServiceXParser::humidity_regex
+(R"del((([0-9]+)|([0-9]+\.[0-9]+))%)del", boost::regex::optimize);
+

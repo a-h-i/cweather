@@ -25,6 +25,7 @@
 #pragma GCC diagnostic ignored "-Wall"
 #include <curl/curl.h>
 #pragma GCC diagnostic pop
+#include <boost/scope_exit.hpp>
 
 const boost::regex
 cweather::utility::HTML_ENTITIY_REGEX( "(&amp;)|(&quot;)|(&lt;)|(&gt;)|(&apos;)",
@@ -39,19 +40,64 @@ std::string cweather::utility::curl_perform( std::string request,
         std::size_t ( *callback ) ( void *, std::size_t,
                                     std::size_t, void * ) )
 {
+    using cweather::exceptions::NetworkException;
     CURL * curl = curl_easy_init(); // init curl
-    curl_easy_setopt( curl, CURLOPT_URL, request.c_str() ); // URL
-    curl_easy_setopt( curl, CURLOPT_TCP_KEEPALIVE, 0 );
+    char error_buffer[CURL_ERROR_SIZE];
+    if(curl == nullptr)
+    {
+        throw NetworkException("Failed to init CURL handle.");
+    }
+    BOOST_SCOPE_EXIT_ALL(&)
+    {
+     curl_easy_cleanup( curl );   
+    };
+    auto ec = curl_easy_setopt( curl, CURLOPT_ERRORBUFFER, error_buffer);
+
+    if(ec != CURLE_OK)
+    {
+        throw NetworkException("Failed to enable CURL error strings.");
+    }
+
+    ec = curl_easy_setopt( curl, CURLOPT_URL, request.c_str() ); // URL
+
+    if(ec != CURLE_OK)
+    {
+        throw NetworkException(std::string("Failed to set CURL URL. CURL Error Code : ") + ec + 
+                                ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
+    }
+
+    ec = curl_easy_setopt( curl, CURLOPT_TCP_KEEPALIVE, 0 );
+    if(ec != CURLE_OK)
+    {
+        throw NetworkException(std::string("Failed to set CURL TCP_KEEP_ALIVE option. CURL Error Code : ") + ec 
+                                + ". CURL Error Message : "  + std::string(curl_easy_strerror(ec)) );
+    }
     std::string response;
-    curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, callback ); // callback
-    curl_easy_setopt( curl, CURLOPT_WRITEDATA,
+    ec = curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, callback ); // callback
+    if(ec != CURLE_OK)
+    {
+        throw NetworkException(std::string("Failed to set CURLOPT_WRITEFUNCTION option. CURL Error Code : ") + ec
+                                + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
+    }
+    ec = curl_easy_setopt( curl, CURLOPT_WRITEDATA,
                       reinterpret_cast<void *> ( &response ) );
-    curl_easy_setopt( curl, CURLOPT_WRITEHEADER, nullptr );
-    CURLcode ec = curl_easy_perform( curl ); // send request
-    curl_easy_cleanup( curl );
+    if(ec != CURLE_OK)
+    {
+        throw NetworkException(std::string("Failed to set CURLOPT_WRITEDATA option. CURL Error Code : ") + ec
+                                + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
+    }
+    ec = curl_easy_setopt( curl, CURLOPT_WRITEHEADER, nullptr );
+    if(ec != CURLE_OK)
+    {
+        throw NetworkException(std::string("Failed to set CURLOPT_WRITEHEADER option. CURL Error Code : ") + ec
+                                + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
+    }
+    ec = curl_easy_perform( curl ); // send request
+
     if( ec != CURLE_OK )
-        {
-            // TODO: throw stuff
-        }
+    {
+        throw NetworkException(std::string("Failed to perform CURL request. CURL Error Code : ") + ec
+                              + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
+    }
     return response;
 }

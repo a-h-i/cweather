@@ -20,18 +20,39 @@
 * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "weather_service.hpp"
+
+#ifndef EXCEPTIONS_HPP
+#define EXCEPTIONS_HPP
+#include <stdexcept>
+
+namespace cweather { namespace exceptions { 
 
 
-int main( int argc, char * argv[] )
+struct CWeatherException : public std::runtime_error
 {
-    cweather::service::WebServiceXWeatherService to_test;
-    auto data = to_test.get_weather_data( "Egypt", "Cairo" );
-    std::cout << "\nTemperature : " << data.temperature
-              << "\nWind Speed : " << data.wind_speed
-              << "\nWind Direction : " << data.wind_direction
-              << "\nPressure : " << data.pressure
-              << "\nVisibility : " << data.visibility
-              << "\nHumidity : " << data.humidity << '\n'; 
-    return 0;
-}
+
+    CWeatherException(const std::string &what): runtime_error(what){}
+
+};
+
+/**
+ *@brief currently indicates an error from libcurl.
+ */
+struct NetworkException : public CWeatherException
+{
+    NetworkException(const std::string &what) : CWeatherException(what) {}
+};
+
+/**
+ *@brief thrown by parsers, usually when they encounter unexpected formats.
+ */
+struct DataFormatException : public CWeatherException
+{
+    DataFormatException(const std::string &what) : CWeatherException(what) {} 
+};
+
+
+}} // cweather::exceptions
+
+
+#endif

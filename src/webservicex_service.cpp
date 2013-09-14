@@ -23,13 +23,12 @@
 
 #include "weather_service.hpp"
 #include "utility.hpp"
+#include "parsers.hpp"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
 #include "tinyxml2/tinyxml2.h"
 #pragma GCC diagnostic pop
 #include <vector>
-#include <iostream>
-#include <algorithm>
 
 // initalize static constants
 const std::string cweather::service::WebServiceXWeatherService::HOST =
@@ -46,6 +45,7 @@ const std::string cweather::service::WebServiceXWeatherService::CITY_REQUEST =
     HOST +
     "/globalweather.asmx/GetWeather?CityName=" + CITY_TOKEN + "&CountryName=" +
     COUNTRY_TOKEN;
+
 
 
 cweather::service::WebServiceXWeatherService::WebServiceXWeatherService():
@@ -77,9 +77,7 @@ static std::size_t handle_response( void * ptr, size_t size, size_t count,
 
 
 
-/**
- *@brief retrieved xml data from remote server
- */
+
 std::string cweather::service::WebServiceXWeatherService::get_xml_helper(
     const std::string& country,
     const std::string& city )
@@ -100,9 +98,7 @@ std::string cweather::service::WebServiceXWeatherService::get_xml_helper(
     return clean_response;
 }
 
-/**
- *@brief gets and parses weather data from remote
- */
+
 cweather::WeatherData
 cweather::service::WebServiceXWeatherService::get_weather_data(
     const std::string& country,
@@ -111,16 +107,17 @@ cweather::service::WebServiceXWeatherService::get_weather_data(
     std::string response = get_xml_helper( country, city );
     tinyxml2::XMLDocument doc;
     doc.Parse( response.c_str() );
-    auto weather_element_ptr =
-        doc.RootElement()->FirstChildElement( "CurrentWeather" );
-    const char * temperature =
-        weather_element_ptr->FirstChildElement( "Temperature" )->GetText();
-    const char * wind = weather_element_ptr->FirstChildElement( "Wind" )->GetText();
-    const char * visibilty =
-        weather_element_ptr->FirstChildElement( "Visibility" )->GetText();
-    const char * pressure =
-        weather_element_ptr->FirstChildElement( "Pressure" )->GetText();
-    return {0, 0, 0.0f, 0.0f};
+    parsers::WebServiceXParser parser(&doc);
+    WeatherData data;
+    data.temperature = parser.get_temp_celcius();
+    data.pressure = parser.get_pressure_pascal();
+    data.visibility = parser.get_visibility_kilometers();
+    data.wind_speed = parser.get_wind_speed_kph();
+    data.wind_direction = parser.get_wind_direction_degrees();
+    data.humidity = parser.get_humidity();
+
+
+    return data;
 }
 
 

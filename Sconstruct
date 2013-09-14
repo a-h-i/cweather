@@ -1,7 +1,7 @@
 
 import os
 #source files
-src =  Split('src/entry src/utility src/webservicex_service  src/city_forecast')
+src =  Split('src/entry src/utility src/webservicex_service  src/city_forecast src/webservicex_parser')
 
 debug = Environment(ENV = {'PATH' : os.environ['PATH']})
 debug['CXX'] = 'icc'

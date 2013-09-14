@@ -27,7 +27,6 @@
 #pragma GCC diagnostic ignored "-Wall"
 #include <boost/regex.hpp>
 #pragma GCC diagnostic pop
-#include <memory>
 
 namespace cweather
 {
@@ -35,11 +34,12 @@ namespace cweather
 struct WeatherData
 {
 
-    unsigned short wind_speed; // SI
-    unsigned short wind_direction_degrees; // SI
-    double humidity; // SI
-    double temperature;// SI
-    double pressure; // SI
+    double wind_speed; // kilometers/hour
+    double visibility; // kilometers
+    double humidity; // percentage
+    double temperature;// Celcius
+    double pressure; // Pascals
+    unsigned short wind_direction; // degrees
 };
 
 namespace service
@@ -51,6 +51,10 @@ class WeatherService
 public:
     WeatherService() {}
     virtual ~WeatherService() {};
+    /**
+    *@brief gets and parses weather data from remote.
+    *@detail performs blocking IO operations.
+    */
     virtual WeatherData get_weather_data( const std::string& country,
                                           const std::string& city ) = 0;
 protected:
@@ -70,6 +74,9 @@ private:
     static const std::string CITY_TOKEN;
     static const std::string CITY_REQUEST;
     static const boost::regex CITY_REQUEST_REGEX;
+    /**
+    *@brief retrieves xml data from remote server
+    */
     static std::string get_xml_helper( const std::string& country,
                                        const std::string& city );
 };

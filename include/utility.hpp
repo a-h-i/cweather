@@ -26,7 +26,7 @@
 /**
  *@file
  */
-
+#include "exceptions.hpp"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
 #include <boost/regex.hpp>
@@ -65,6 +65,8 @@ OutputTtr decode_html_entities( OutputTtr out, MutableBidirItr begin,
  * @return http response body as processed by provided call back.
  * @param callback provided call back function for processing response body. param actual types (const char * original_body, std::size_t body_length, std::string *to_fill )
  * @param request HTTP request to send.
+ * @throws cweather::exceptions::NetworkException if an error occured while performing the request.
+ * @sa cweather::exceptions::NetworkException
  */
 std::string curl_perform( std::string request,
                           std::size_t ( *callback ) ( void *, std::size_t, std::size_t, void * ) );

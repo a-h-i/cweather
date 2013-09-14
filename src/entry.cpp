@@ -32,6 +32,6 @@ int main( int argc, char * argv[] )
               << "\nWind Direction : " << data.wind_direction
               << "\nPressure : " << data.pressure
               << "\nVisibility : " << data.visibility
-              << "\nHumidity : " << data.humidity << '\n'; 
+              << "\nHumidity : " << data.humidity << '\n';
     return 0;
 }

@@ -22,21 +22,25 @@
 */
 #include "parsers.hpp"
 
-const boost::regex cweather::service::parsers::WebServiceXParser::temperature_regex
- (R"del((([0-9]+\.[0-9]+)|([0-9]+)) C)del", boost::regex::optimize);
+const boost::regex
+cweather::service::parsers::WebServiceXParser::temperature_regex
+( R"del((([0-9]+\.[0-9]+)|([0-9]+)) C)del", boost::regex::optimize );
 
 const boost::regex cweather::service::parsers::WebServiceXParser::pressure_regex
- (R"del((([0-9]+\.[0-9]+])|([0-9]+)) hPa)del", boost::regex::optimize);
+( R"del((([0-9]+\.[0-9]+])|([0-9]+)) hPa)del", boost::regex::optimize );
 
-const boost::regex cweather::service::parsers::WebServiceXParser::visibility_regex
-(R"del([0-9]+)del", boost::regex::optimize);
+const boost::regex
+cweather::service::parsers::WebServiceXParser::visibility_regex
+( R"del([0-9]+)del", boost::regex::optimize );
 
-const boost::regex cweather::service::parsers::WebServiceXParser::wind_direction_regex
-(R"del([0-9]+ degrees)del", boost::regex::optimize);
+const boost::regex
+cweather::service::parsers::WebServiceXParser::wind_direction_regex
+( R"del([0-9]+ degrees)del", boost::regex::optimize );
 
-const boost::regex cweather::service::parsers::WebServiceXParser::wind_speed_regex
-(R"del((([0-9]+)|([0-9]+\.[0-9]+)) MPH)del", boost::regex::optimize);
+const boost::regex
+cweather::service::parsers::WebServiceXParser::wind_speed_regex
+( R"del((([0-9]+)|([0-9]+\.[0-9]+)) MPH)del", boost::regex::optimize );
 
 const boost::regex cweather::service::parsers::WebServiceXParser::humidity_regex
-(R"del((([0-9]+)|([0-9]+\.[0-9]+))%)del", boost::regex::optimize);
+( R"del((([0-9]+)|([0-9]+\.[0-9]+))%)del", boost::regex::optimize );
 

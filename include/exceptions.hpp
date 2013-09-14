@@ -25,13 +25,16 @@
 #define EXCEPTIONS_HPP
 #include <stdexcept>
 
-namespace cweather { namespace exceptions { 
+namespace cweather
+{
+namespace exceptions
+{
 
 
 struct CWeatherException : public std::runtime_error
 {
 
-    CWeatherException(const std::string &what): runtime_error(what){}
+    CWeatherException( const std::string& what ): runtime_error( what ) {}
 
 };
 
@@ -40,7 +43,7 @@ struct CWeatherException : public std::runtime_error
  */
 struct NetworkException : public CWeatherException
 {
-    NetworkException(const std::string &what) : CWeatherException(what) {}
+    NetworkException( const std::string& what ) : CWeatherException( what ) {}
 };
 
 /**
@@ -48,11 +51,12 @@ struct NetworkException : public CWeatherException
  */
 struct DataFormatException : public CWeatherException
 {
-    DataFormatException(const std::string &what) : CWeatherException(what) {} 
+    DataFormatException( const std::string& what ) : CWeatherException( what ) {}
 };
 
 
-}} // cweather::exceptions
+}
+} // cweather::exceptions
 
 
 #endif

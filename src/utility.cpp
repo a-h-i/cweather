@@ -43,61 +43,65 @@ std::string cweather::utility::curl_perform( std::string request,
     using cweather::exceptions::NetworkException;
     CURL * curl = curl_easy_init(); // init curl
     char error_buffer[CURL_ERROR_SIZE];
-    if(curl == nullptr)
+    if( curl == nullptr )
+        {
+            throw NetworkException( "Failed to init CURL handle." );
+        }
+    BOOST_SCOPE_EXIT_ALL(& )
     {
-        throw NetworkException("Failed to init CURL handle.");
-    }
-    BOOST_SCOPE_EXIT_ALL(&)
-    {
-     curl_easy_cleanup( curl );   
+        curl_easy_cleanup( curl );
     };
-    auto ec = curl_easy_setopt( curl, CURLOPT_ERRORBUFFER, error_buffer);
-
-    if(ec != CURLE_OK)
-    {
-        throw NetworkException("Failed to enable CURL error strings.");
-    }
-
+    auto ec = curl_easy_setopt( curl, CURLOPT_ERRORBUFFER, error_buffer );
+    if( ec != CURLE_OK )
+        {
+            throw NetworkException( "Failed to enable CURL error strings." );
+        }
     ec = curl_easy_setopt( curl, CURLOPT_URL, request.c_str() ); // URL
-
-    if(ec != CURLE_OK)
-    {
-        throw NetworkException(std::string("Failed to set CURL URL. CURL Error Code : ") + ec + 
-                                ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
-    }
-
+    if( ec != CURLE_OK )
+        {
+            throw NetworkException(
+                std::string( "Failed to set CURL URL. CURL Error Code : " ) + ec +
+                ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
+        }
     ec = curl_easy_setopt( curl, CURLOPT_TCP_KEEPALIVE, 0 );
-    if(ec != CURLE_OK)
-    {
-        throw NetworkException(std::string("Failed to set CURL TCP_KEEP_ALIVE option. CURL Error Code : ") + ec 
-                                + ". CURL Error Message : "  + std::string(curl_easy_strerror(ec)) );
-    }
+    if( ec != CURLE_OK )
+        {
+            throw NetworkException(
+                std::string( "Failed to set CURL TCP_KEEP_ALIVE option. CURL Error Code : " ) +
+                ec
+                + ". CURL Error Message : "  + std::string( curl_easy_strerror( ec ) ) );
+        }
     std::string response;
     ec = curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, callback ); // callback
-    if(ec != CURLE_OK)
-    {
-        throw NetworkException(std::string("Failed to set CURLOPT_WRITEFUNCTION option. CURL Error Code : ") + ec
-                                + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
-    }
-    ec = curl_easy_setopt( curl, CURLOPT_WRITEDATA,
-                      reinterpret_cast<void *> ( &response ) );
-    if(ec != CURLE_OK)
-    {
-        throw NetworkException(std::string("Failed to set CURLOPT_WRITEDATA option. CURL Error Code : ") + ec
-                                + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
-    }
-    ec = curl_easy_setopt( curl, CURLOPT_WRITEHEADER, nullptr );
-    if(ec != CURLE_OK)
-    {
-        throw NetworkException(std::string("Failed to set CURLOPT_WRITEHEADER option. CURL Error Code : ") + ec
-                                + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
-    }
-    ec = curl_easy_perform( curl ); // send request
-
     if( ec != CURLE_OK )
-    {
-        throw NetworkException(std::string("Failed to perform CURL request. CURL Error Code : ") + ec
-                              + ". CURL Error Message : " + std::string(curl_easy_strerror(ec)));
-    }
+        {
+            throw NetworkException(
+                std::string( "Failed to set CURLOPT_WRITEFUNCTION option. CURL Error Code : " )
+                + ec
+                + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
+        }
+    ec = curl_easy_setopt( curl, CURLOPT_WRITEDATA,
+                           reinterpret_cast<void *> ( &response ) );
+    if( ec != CURLE_OK )
+        {
+            throw NetworkException(
+                std::string( "Failed to set CURLOPT_WRITEDATA option. CURL Error Code : " ) + ec
+                + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
+        }
+    ec = curl_easy_setopt( curl, CURLOPT_WRITEHEADER, nullptr );
+    if( ec != CURLE_OK )
+        {
+            throw NetworkException(
+                std::string( "Failed to set CURLOPT_WRITEHEADER option. CURL Error Code : " ) +
+                ec
+                + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
+        }
+    ec = curl_easy_perform( curl ); // send request
+    if( ec != CURLE_OK )
+        {
+            throw NetworkException(
+                std::string( "Failed to perform CURL request. CURL Error Code : " ) + ec
+                + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
+        }
     return response;
 }

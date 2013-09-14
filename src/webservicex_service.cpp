@@ -84,9 +84,9 @@ std::string cweather::service::WebServiceXWeatherService::get_xml_helper(
 {
     std::vector<char> temp( CITY_REQUEST.size() + country.size() + city.size() );
     const std::string fmt = std::string( "(?1" ) + city + ")(?2" + country + ")";
-    auto new_end =  boost::regex_replace( temp.begin(), CITY_REQUEST.cbegin(), CITY_REQUEST.cend(), CITY_REQUEST_REGEX, fmt,
-                                 boost::match_default | boost::format_all );
-
+    auto new_end =  boost::regex_replace( temp.begin(), CITY_REQUEST.cbegin(),
+                                          CITY_REQUEST.cend(), CITY_REQUEST_REGEX, fmt,
+                                          boost::match_default | boost::format_all );
     std::string request_str( temp.begin(),
                              new_end ); // this string contains a valid URL
     auto response = utility::curl_perform( request_str, handle_response );
@@ -107,7 +107,7 @@ cweather::service::WebServiceXWeatherService::get_weather_data(
     std::string response = get_xml_helper( country, city );
     tinyxml2::XMLDocument doc;
     doc.Parse( response.c_str() );
-    parsers::WebServiceXParser parser(&doc);
+    parsers::WebServiceXParser parser( &doc );
     WeatherData data;
     data.temperature = parser.get_temp_celcius();
     data.pressure = parser.get_pressure_pascal();
@@ -115,8 +115,6 @@ cweather::service::WebServiceXWeatherService::get_weather_data(
     data.wind_speed = parser.get_wind_speed_kph();
     data.wind_direction = parser.get_wind_direction_degrees();
     data.humidity = parser.get_humidity();
-
-
     return data;
 }
 

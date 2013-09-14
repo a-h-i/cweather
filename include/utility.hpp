@@ -61,7 +61,7 @@ OutputTtr decode_html_entities( OutputTtr out, MutableBidirItr begin,
 
 
 /**
- * @brief performs a blocking HTTP GET request using libcurl. 
+ * @brief performs a blocking HTTP GET request using libcurl.
  * @return http response body as processed by provided call back.
  * @param callback provided call back function for processing response body. param actual types (const char * original_body, std::size_t body_length, std::string *to_fill )
  * @param request HTTP request to send.

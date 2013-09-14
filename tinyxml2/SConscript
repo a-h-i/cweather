@@ -1,0 +1,9 @@
+#Sconscript for tinyxml2
+Import("env")
+Import("tag")
+def make_objs(file_list, suffix, env) :
+    return [ env.Object(file + suffix + '.o', file + '.cpp' ) for file in file_list ]
+
+files = ['tinyxml2']
+objs = make_objs(files, tag , env)
+Return('objs')

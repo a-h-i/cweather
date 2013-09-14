@@ -1,0 +1,9 @@
+#Sconscript for cweather
+Import("env")
+Import("tag")
+def make_objs(file_list, suffix, enviroment) :
+    return [ enviroment.Object(file + suffix + '.o', file + '.cpp' ) for file in file_list ]
+
+files =  Split('entry utility webservicex_service city_forecast webservicex_parser')
+objs = make_objs(files, tag, env)
+Return('objs')

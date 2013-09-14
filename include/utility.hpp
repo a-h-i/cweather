@@ -62,10 +62,11 @@ OutputTtr decode_html_entities( OutputTtr out, MutableBidirItr begin,
  *@brief replaces spaces with '+'.
  */
 template <class OutputItr, class InputItr>
-OutputItr encode_space( OutputItr out, InputItr begin, InputItr  end)
+OutputItr encode_space( OutputItr out, InputItr begin, InputItr  end )
 {
-    return boost::regex_replace(out, begin, end, HTML_DATA_SPACE_REPLACE_REGEX, HTML_DATA_SPACE_REPLACE_FMT
-                                , boost::match_default | boost::format_all);
+    return boost::regex_replace( out, begin, end, HTML_DATA_SPACE_REPLACE_REGEX,
+                                 HTML_DATA_SPACE_REPLACE_FMT
+                                 , boost::match_default | boost::format_all );
 }
 
 

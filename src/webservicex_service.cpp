@@ -83,21 +83,25 @@ std::string cweather::service::WebServiceXWeatherService::get_xml_helper(
     const std::string& city )
 {
     std::string encoded_country;
-    utility::encode_space(std::back_inserter(encoded_country), country.cbegin(), country.cend());
+    utility::encode_space( std::back_inserter( encoded_country ), country.cbegin(),
+                           country.cend() );
     std::string encoded_city;
-    utility::encode_space(std::back_inserter(encoded_city), city.cbegin(), city.cend());
-
+    utility::encode_space( std::back_inserter( encoded_city ), city.cbegin(),
+                           city.cend() );
     std::string request_str;
-    request_str.reserve(CITY_REQUEST.size() + encoded_country.size() + encoded_city.size());
-    const std::string fmt = std::string( "(?1" ) + encoded_city + ")(?2" + encoded_country + ")";
-    auto new_end =  boost::regex_replace( std::back_inserter(request_str), CITY_REQUEST.cbegin(),
+    request_str.reserve( CITY_REQUEST.size() + encoded_country.size() +
+                         encoded_city.size() );
+    const std::string fmt = std::string( "(?1" ) + encoded_city + ")(?2" +
+                            encoded_country + ")";
+    auto new_end =  boost::regex_replace( std::back_inserter( request_str ),
+                                          CITY_REQUEST.cbegin(),
                                           CITY_REQUEST.cend(), CITY_REQUEST_REGEX, fmt,
                                           boost::match_default | boost::format_all );
-
     auto response = utility::curl_perform( request_str, handle_response );
     std::string clean_response; // after replacing entities
     clean_response.reserve( response.size() );
-    auto str_end = utility::decode_html_entities( std::back_inserter(clean_response),
+    auto str_end = utility::decode_html_entities( std::back_inserter(
+                       clean_response ),
                    response.begin(), response.end() );
     return clean_response;
 }

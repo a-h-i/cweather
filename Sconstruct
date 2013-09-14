@@ -1,7 +1,6 @@
 
 import os
-#source files
-src =  Split('src/entry src/utility src/webservicex_service  src/city_forecast src/webservicex_parser')
+
 
 debug = Environment(ENV = {'PATH' : os.environ['PATH']})
 debug['CXX'] = 'icc'
@@ -10,16 +9,22 @@ debug['CXXFLAGS'] = '-Wall -std=c++11 -O0 -g -pg -I./include -I.'
 release = Environment(ENV = {'PATH' : os.environ['PATH']})
 release['CXX'] = 'icc'
 release['CXXFLAGS'] = '-Wall -Werror -std=c++11 -O3 -ipo -no-prec-div -xSSSE3 -axcore-avx2 -I./include -I.'
-def make_objs(file_list, suffix, env) :
-    return [ env.Object(file + suffix + '.o', file + '.cpp' ) for file in file_list ]
+
 
 libs = Split('-lboost_date_time -lboost_regex -lboost_system -lcurl -lpthread -lrt')
 
-d_objs = make_objs(src, '-dbg' , debug) + debug.Object('tinyxml2-dbg.o', 'tinyxml2/tinyxml2.cpp')
+def make_package(env, tag, package) :
+    objs = SConscript(os.path.join(package,"SConscript"), exports={'env' : env, 'tag' :  tag})
+    return objs
 
+
+r_objs = make_package(release, 'release', 'src') + make_package(release, 'release', 'tinyxml2')
+
+r_target = release.Program('cweather', r_objs, LIBS=libs)
+Default(r_target)
+
+d_objs = make_package(debug, 'debug', 'src') + make_package(debug, 'debug', 'tinyxml2')
 d_target = debug.Program('debug', d_objs, LIBS=libs)
 
 
-r_objs = make_objs(src, '-release', release) + release.Object('tinyxml2-release.o', 'tinyxml2/tinyxml2.cpp' );
-r_target = release.Program('cweather', r_objs, LIBS=libs)
-Default(r_target)
+

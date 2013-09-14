@@ -35,6 +35,9 @@ cweather::utility::HTML_ENTITIY_FMT( "(?1&)(?2\")(?3<)(?4>)(?5')" );
 const boost::regex cweather::utility::HTML_HEADER_REGEX(
     R"delim((.+\w\r\n)|\r\n)delim", boost::regex::optimize );
 
+const boost::regex cweather::utility::HTML_DATA_SPACE_REPLACE_REGEX
+(" ", boost::regex::optimize);
+const std::string cweather::utility::HTML_DATA_SPACE_REPLACE_FMT("(?+)");
 
 std::string cweather::utility::curl_perform( std::string request,
         std::size_t ( *callback ) ( void *, std::size_t,

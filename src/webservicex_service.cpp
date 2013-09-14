@@ -29,7 +29,8 @@
 #include "tinyxml2/tinyxml2.h"
 #pragma GCC diagnostic pop
 #include <vector>
-
+#include <iterator>
+#include <iostream>
 // initalize static constants
 const std::string cweather::service::WebServiceXWeatherService::HOST =
     "http://www.webservicex.net";
@@ -82,13 +83,19 @@ std::string cweather::service::WebServiceXWeatherService::get_xml_helper(
     const std::string& country,
     const std::string& city )
 {
-    std::vector<char> temp( CITY_REQUEST.size() + country.size() + city.size() );
-    const std::string fmt = std::string( "(?1" ) + city + ")(?2" + country + ")";
+    std::string encoded_country;
+    utility::encode_space(std::back_inserter(encoded_country), country.cbegin(), country.cend());
+    std::string encoded_city;
+    utility::encode_space(std::back_inserter(encoded_city), city.cbegin(), city.cend());
+
+    std::vector<char> temp( CITY_REQUEST.size() + encoded_country.size() + encoded_city.size() );
+    const std::string fmt = std::string( "(?1" ) + encoded_city + ")(?2" + encoded_country + ")";
     auto new_end =  boost::regex_replace( temp.begin(), CITY_REQUEST.cbegin(),
                                           CITY_REQUEST.cend(), CITY_REQUEST_REGEX, fmt,
                                           boost::match_default | boost::format_all );
     std::string request_str( temp.begin(),
                              new_end ); // this string contains a valid URL
+    std::cout << encoded_country << std::endl;
     auto response = utility::curl_perform( request_str, handle_response );
     std::string clean_response; // after replacing entities
     clean_response.reserve( response.size() );

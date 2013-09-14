@@ -42,7 +42,8 @@ namespace utility
 extern const boost::regex HTML_ENTITIY_REGEX;
 extern const std::string HTML_ENTITIY_FMT;
 extern const boost::regex HTML_HEADER_REGEX;
-
+extern const boost::regex HTML_DATA_SPACE_REPLACE_REGEX;
+extern const std::string HTML_DATA_SPACE_REPLACE_FMT;
 
 
 
@@ -57,6 +58,15 @@ OutputTtr decode_html_entities( OutputTtr out, MutableBidirItr begin,
                                  HTML_ENTITIY_FMT, boost::match_default | boost::format_all );
 }
 
+/**
+ *@brief replaces spaces with '+'.
+ */
+template <class OutputItr, class InputItr>
+OutputItr encode_space( OutputItr out, InputItr begin, InputItr  end)
+{
+    return boost::regex_replace(out, begin, end, HTML_DATA_SPACE_REPLACE_REGEX, HTML_DATA_SPACE_REPLACE_FMT
+                                , boost::match_default | boost::format_all);
+}
 
 
 

@@ -22,16 +22,64 @@
 */
 #include "weather_service.hpp"
 
+static const char * version = "0.1.0 Alpha";
 
-int main( int argc, char * argv[] )
+static void print_help()
 {
-    cweather::service::WebServiceXWeatherService to_test;
-    auto data = to_test.get_weather_data( "Egypt", "Cairo" );
-    std::cout << "\nTemperature : " << data.temperature
-              << "\nWind Speed : " << data.wind_speed
-              << "\nWind Direction : " << data.wind_direction
-              << "\nPressure : " << data.pressure
-              << "\nVisibility : " << data.visibility
-              << "\nHumidity : " << data.humidity << '\n';
-    return 0;
+    std::cout << "cweather weather utility version : " << version
+              << "\nusage cweather [COUNTRY] [CITY]"
+              << "\nor cweather [OPTION]"
+              << "\nValid options : "
+              << "\n--help or -h :\n\tprints this help message."
+              << "\n--about or --version or -v :\n\tprints version and copyright notice.\n";
+}
+
+static void print_info()
+{
+    std::cout << "cweather weather utility version : " << version
+              << ".\nCopytight (C) 2013 Ahmed H. Ismail."
+              << "\nReleased under MIT License."
+              << "\nSource code and License can be found at http://github.com/ah450/cweather .\n";
+
+}
+
+int main( int argc, const char * argv[] )
+{
+    
+
+    if(argc >= 3)
+    {
+        cweather::service::WebServiceXWeatherService to_test;
+        try{
+        auto data = to_test.get_weather_data( argv[1], argv[2] );
+
+        std::cout << "Temperature : " << data.temperature
+                  << "\nWind Speed : " << data.wind_speed
+                  << "\nWind Direction : " << data.wind_direction
+                  << "\nPressure : " << data.pressure
+                  << "\nVisibility : " << data.visibility
+                  << "\nHumidity : " << data.humidity << '\n';
+        return 0;
+        } catch(cweather::exceptions::IncorrectLocationException &)
+        {
+            std::cerr << "Incorrect paramaters.\nrun cweather --help for usage information.\n";
+        }
+    }else if (argc == 2)
+    {
+        auto argument = std::string(argv[1]);
+    
+        if(argument == "--about" || argument == "--version" || argument == "-v")
+        {
+            print_info();
+            return 0;
+        }else
+        {
+          print_help();
+        }        
+    }else
+    {
+        print_help();
+        return -1;
+    }
+
 }

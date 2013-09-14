@@ -23,6 +23,7 @@
 
 #ifndef WEATHER_SERVICE_HPP
 #define WEATHER_SERVICE_HPP
+#include "exceptions.hpp"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
 #include <boost/regex.hpp>
@@ -54,6 +55,12 @@ public:
     /**
     *@brief gets and parses weather data from remote.
     *@detail performs blocking IO operations.
+    *@throws cweather::exceptions::NetworkException
+    *@throws cweather::exceptions::DataFormatException
+    *@throws cweather::exceptions::IncorrectLocationException
+    *@sa cweather::exceptions::NetworkException
+    *@sa cweather::exceptions::DataFormatException
+    *@sa cweather::exceptions::IncorrectLocationException
     */
     virtual WeatherData get_weather_data( const std::string& country,
                                           const std::string& city ) = 0;

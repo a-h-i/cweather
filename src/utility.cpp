@@ -47,10 +47,10 @@ std::string cweather::utility::curl_perform( std::string request,
         {
             throw NetworkException( "Failed to init CURL handle." );
         }
-    BOOST_SCOPE_EXIT_ALL(& )
+    BOOST_SCOPE_EXIT(&curl)
     {
         curl_easy_cleanup( curl );
-    };
+    }BOOST_SCOPE_EXIT_END
     auto ec = curl_easy_setopt( curl, CURLOPT_ERRORBUFFER, error_buffer );
     if( ec != CURLE_OK )
         {

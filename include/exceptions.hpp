@@ -54,6 +54,13 @@ struct DataFormatException : public CWeatherException
     DataFormatException( const std::string& what ) : CWeatherException( what ) {}
 };
 
+/**
+ *@brief thrown by weather services when they are called with an invalid City and Country pair.
+ */
+struct IncorrectLocationException : public CWeatherException
+{
+    IncorrectLocationException( const std::string& what ) : CWeatherException( what ) {}
+};
 
 }
 } // cweather::exceptions

@@ -40,46 +40,46 @@ static void print_info()
               << ".\nCopytight (C) 2013 Ahmed H. Ismail."
               << "\nReleased under MIT License."
               << "\nSource code and License can be found at http://github.com/ah450/cweather .\n";
-
 }
 
 int main( int argc, const char * argv[] )
 {
-    
-
-    if(argc >= 3)
-    {
-        cweather::service::WebServiceXWeatherService to_test;
-        try{
-        auto data = to_test.get_weather_data( argv[1], argv[2] );
-
-        std::cout << "Temperature : " << data.temperature
-                  << "\nWind Speed : " << data.wind_speed
-                  << "\nWind Direction : " << data.wind_direction
-                  << "\nPressure : " << data.pressure
-                  << "\nVisibility : " << data.visibility
-                  << "\nHumidity : " << data.humidity << '\n';
-        return 0;
-        } catch(cweather::exceptions::IncorrectLocationException &)
+    if( argc >= 3 )
         {
-            std::cerr << "Incorrect paramaters.\nrun cweather --help for usage information.\n";
+            cweather::service::WebServiceXWeatherService to_test;
+            try
+                {
+                    auto data = to_test.get_weather_data( argv[1], argv[2] );
+                    std::cout << "Temperature : " << data.temperature
+                              << "\nWind Speed : " << data.wind_speed
+                              << "\nWind Direction : " << data.wind_direction
+                              << "\nPressure : " << data.pressure
+                              << "\nVisibility : " << data.visibility
+                              << "\nHumidity : " << data.humidity << '\n';
+                    return 0;
+                }
+            catch( cweather::exceptions::IncorrectLocationException& )
+                {
+                    std::cerr <<
+                              "Incorrect paramaters.\nrun cweather --help for usage information.\n";
+                }
         }
-    }else if (argc == 2)
-    {
-        auto argument = std::string(argv[1]);
-    
-        if(argument == "--about" || argument == "--version" || argument == "-v")
+    else if ( argc == 2 )
         {
-            print_info();
-            return 0;
-        }else
+            auto argument = std::string( argv[1] );
+            if( argument == "--about" || argument == "--version" || argument == "-v" )
+                {
+                    print_info();
+                    return 0;
+                }
+            else
+                {
+                    print_help();
+                }
+        }
+    else
         {
-          print_help();
-        }        
-    }else
-    {
-        print_help();
-        return -1;
-    }
-
+            print_help();
+            return -1;
+        }
 }

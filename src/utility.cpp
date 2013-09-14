@@ -47,10 +47,11 @@ std::string cweather::utility::curl_perform( std::string request,
         {
             throw NetworkException( "Failed to init CURL handle." );
         }
-    BOOST_SCOPE_EXIT(&curl)
+    BOOST_SCOPE_EXIT( &curl )
     {
         curl_easy_cleanup( curl );
-    }BOOST_SCOPE_EXIT_END
+    }
+    BOOST_SCOPE_EXIT_END
     auto ec = curl_easy_setopt( curl, CURLOPT_ERRORBUFFER, error_buffer );
     if( ec != CURLE_OK )
         {
@@ -60,7 +61,8 @@ std::string cweather::utility::curl_perform( std::string request,
     if( ec != CURLE_OK )
         {
             throw NetworkException(
-                std::string( "Failed to set CURL URL. CURL Error Code : " ) + std::to_string(static_cast<int>(ec)) +
+                std::string( "Failed to set CURL URL. CURL Error Code : " ) + std::to_string(
+                    static_cast<int>( ec ) ) +
                 ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
         }
     ec = curl_easy_setopt( curl, CURLOPT_TCP_KEEPALIVE, 0 );
@@ -68,7 +70,7 @@ std::string cweather::utility::curl_perform( std::string request,
         {
             throw NetworkException(
                 std::string( "Failed to set CURL TCP_KEEP_ALIVE option. CURL Error Code : " ) +
-                std::to_string(static_cast<int>(ec))
+                std::to_string( static_cast<int>( ec ) )
                 + ". CURL Error Message : "  + std::string( curl_easy_strerror( ec ) ) );
         }
     std::string response;
@@ -77,7 +79,7 @@ std::string cweather::utility::curl_perform( std::string request,
         {
             throw NetworkException(
                 std::string( "Failed to set CURLOPT_WRITEFUNCTION option. CURL Error Code : " )
-                + std::to_string(static_cast<int>(ec))
+                + std::to_string( static_cast<int>( ec ) )
                 + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
         }
     ec = curl_easy_setopt( curl, CURLOPT_WRITEDATA,
@@ -85,7 +87,8 @@ std::string cweather::utility::curl_perform( std::string request,
     if( ec != CURLE_OK )
         {
             throw NetworkException(
-                std::string( "Failed to set CURLOPT_WRITEDATA option. CURL Error Code : " ) + std::to_string(static_cast<int>(ec))
+                std::string( "Failed to set CURLOPT_WRITEDATA option. CURL Error Code : " ) +
+                std::to_string( static_cast<int>( ec ) )
                 + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
         }
     ec = curl_easy_setopt( curl, CURLOPT_WRITEHEADER, nullptr );
@@ -93,14 +96,15 @@ std::string cweather::utility::curl_perform( std::string request,
         {
             throw NetworkException(
                 std::string( "Failed to set CURLOPT_WRITEHEADER option. CURL Error Code : " ) +
-                std::to_string(static_cast<int>(ec))
+                std::to_string( static_cast<int>( ec ) )
                 + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
         }
     ec = curl_easy_perform( curl ); // send request
     if( ec != CURLE_OK )
         {
             throw NetworkException(
-                std::string( "Failed to perform CURL request. CURL Error Code : " ) + std::to_string(static_cast<int>(ec))
+                std::string( "Failed to perform CURL request. CURL Error Code : " ) +
+                std::to_string( static_cast<int>( ec ) )
                 + ". CURL Error Message : " + std::string( curl_easy_strerror( ec ) ) );
         }
     return response;

@@ -105,10 +105,11 @@ cweather::service::WebServiceXWeatherService::get_weather_data(
     const std::string& city )
 {
     std::string response = get_xml_helper( country, city );
-    if(response.find("Data Not Found") != std::string::npos)
-    {
-        throw cweather::exceptions::IncorrectLocationException(std::string("Country : ") + country  + " City : " + city);
-    }
+    if( response.find( "Data Not Found" ) != std::string::npos )
+        {
+            throw cweather::exceptions::IncorrectLocationException(
+                std::string( "Country : " ) + country  + " City : " + city );
+        }
     tinyxml2::XMLDocument doc;
     doc.Parse( response.c_str() );
     parsers::WebServiceXParser parser( &doc );

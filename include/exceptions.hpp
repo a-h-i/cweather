@@ -59,7 +59,8 @@ struct DataFormatException : public CWeatherException
  */
 struct IncorrectLocationException : public CWeatherException
 {
-    IncorrectLocationException( const std::string& what ) : CWeatherException( what ) {}
+    IncorrectLocationException( const std::string& what ) : CWeatherException(
+            what ) {}
 };
 
 }

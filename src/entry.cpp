@@ -28,6 +28,8 @@ static void print_help()
 {
     std::cout << "cweather weather utility version : " << version
               << "\nusage cweather [COUNTRY] [CITY]"
+              << "\nTo use with multi word city or country name use the following syntax : "
+              << "\n\tcweather 'COUNTRY_WORD_ONE COUNTRY_WORD_TWO' 'CITY_WORD_ONE CITY_WORD_TWO'"
               << "\nor cweather [OPTION]"
               << "\nValid options : "
               << "\n--help or -h :\n\tprints this help message."
@@ -55,7 +57,7 @@ int main( int argc, const char * argv[] )
                               << "\nWind Direction : " << data.wind_direction << " Degrees."
                               << "\nPressure : " << data.pressure << " Pascal."
                               << "\nVisibility : " << data.visibility << " Kilometers."
-                              << "\nHumidity : " << data.humidity * 100 << "%." ;
+                              << "\nHumidity : " << data.humidity * 100 << "%.\n" ;
                     return 0;
                 }
             catch( cweather::exceptions::IncorrectLocationException& )
